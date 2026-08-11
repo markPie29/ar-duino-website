@@ -69,7 +69,7 @@ export const HowItWorks: React.FC = () => {
         </div>
 
         {/* Steps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 relative">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 relative">
           {steps.map((step, idx) => {
             const Icon = step.icon;
             return (
@@ -79,7 +79,9 @@ export const HowItWorks: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="relative group flex flex-col h-full"
+                className={`relative group flex flex-col h-full ${
+                  idx === steps.length - 1 ? 'sm:col-span-2 lg:col-span-1' : ''
+                }`}
               >
                 {/* Step Card */}
                 <div className={`flex-1 rounded-2xl bg-[#1c2b3f]/60 backdrop-blur-md p-6 border ${step.borderColor} group-hover:bg-[#1c2b3f] transition-all duration-300 shadow-xl flex flex-col justify-between`}>

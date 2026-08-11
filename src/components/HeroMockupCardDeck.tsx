@@ -144,221 +144,157 @@ export const HeroMockupCardDeck: React.FC = () => {
     setActiveIndex(idx);
   };
 
-  // Helper to compute 3D stack styles based on distance from active index
-  const getCardStyle = (index: number) => {
-    const total = SCREENS.length;
-    let diff = (index - activeIndex + total) % total;
-    if (diff > total / 2) diff -= total; // Normalized distance [-3, 3]
-
-    if (diff === 0) {
-      // Active Front Card
-      return {
-        zIndex: 30,
-        scale: 1,
-        x: '0%',
-        y: '0%',
-        rotateY: '0deg',
-        rotateX: '0deg',
-        opacity: 1,
-        filter: 'brightness(1) contrast(1)',
-        shadow: '0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 0 30px rgba(53, 162, 244, 0.25)'
-      };
-    } else if (diff === 1 || diff === -(total - 1)) {
-      // Immediate right card behind
-      return {
-        zIndex: 20,
-        scale: 0.9,
-        x: '14%',
-        y: '4%',
-        rotateY: '-12deg',
-        rotateX: '2deg',
-        opacity: 0.7,
-        filter: 'brightness(0.75) blur(0.3px)',
-        shadow: '0 20px 30px -10px rgba(0, 0, 0, 0.6)'
-      };
-    } else if (diff === -1 || diff === total - 1) {
-      // Immediate left card behind
-      return {
-        zIndex: 20,
-        scale: 0.9,
-        x: '-14%',
-        y: '4%',
-        rotateY: '12deg',
-        rotateX: '2deg',
-        opacity: 0.7,
-        filter: 'brightness(0.75) blur(0.3px)',
-        shadow: '0 20px 30px -10px rgba(0, 0, 0, 0.6)'
-      };
-    } else if (diff === 2 || diff === -(total - 2)) {
-      // Second right card behind
-      return {
-        zIndex: 10,
-        scale: 0.8,
-        x: '24%',
-        y: '8%',
-        rotateY: '-20deg',
-        rotateX: '4deg',
-        opacity: 0.4,
-        filter: 'brightness(0.5) blur(1px)',
-        shadow: '0 15px 25px -10px rgba(0, 0, 0, 0.5)'
-      };
-    } else {
-      // Other background cards
-      return {
-        zIndex: 5,
-        scale: 0.75,
-        x: diff > 0 ? '30%' : '-30%',
-        y: '10%',
-        rotateY: diff > 0 ? '-25deg' : '25deg',
-        rotateX: '5deg',
-        opacity: 0.2,
-        filter: 'brightness(0.3) blur(2px)',
-        shadow: 'none'
-      };
-    }
-  };
+  const ActiveIcon = activeScreen.icon;
 
   return (
     <div
-      className="relative w-full max-w-[560px] lg:max-w-[620px] mx-auto flex flex-col items-center select-none"
+      className="relative w-full max-w-xl lg:max-w-[640px] mx-auto flex flex-col items-center select-none"
       onMouseEnter={() => setIsAutoPlaying(false)}
     >
-      {/* Dynamic Screen Header Badge */}
+      {/* 1. Quick Category Navigation Tabs Bar */}
+      <div className="w-full mb-4 overflow-x-auto no-scrollbar pb-1">
+        <div className="flex items-center gap-1.5 justify-start sm:justify-center min-w-max px-1">
+          {SCREENS.map((screen, idx) => {
+            const Icon = screen.icon;
+            const isActive = idx === activeIndex;
+            return (
+              <button
+                key={screen.id}
+                onClick={() => handleSelect(idx)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-nunito font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-[#35A2F4]/20 border border-[#35A2F4] text-white shadow-lg shadow-[#35A2F4]/20'
+                    : 'bg-[#1c2b3f]/70 border border-white/10 text-[#8A9BB5] hover:text-white hover:bg-[#1c2b3f]'
+                }`}
+              >
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#35A2F4]' : 'text-[#8A9BB5]'}`} />
+                <span>{screen.title.split(' ')[0]}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 2. Main Interactive Smartphone Frame */}
+      <div className="relative w-full aspect-[16/9.5] sm:aspect-[16/9] rounded-2xl sm:rounded-3xl p-2.5 sm:p-3 bg-gradient-to-b from-[#2a3c54] via-[#1c2b3f] to-[#0e1724] border-2 sm:border-4 border-white/20 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),0_0_35px_rgba(53,162,244,0.2)] backdrop-blur-xl flex flex-col justify-between overflow-hidden group">
+        
+        {/* Landscape Speaker Notch Indicators */}
+        <div className="absolute top-1/2 left-1 -translate-y-1/2 w-1.5 sm:w-2 h-10 sm:h-12 bg-white/15 rounded-full z-30 pointer-events-none" />
+        <div className="absolute top-1/2 right-1 -translate-y-1/2 w-1.5 sm:w-2 h-10 sm:h-12 bg-white/15 rounded-full z-30 pointer-events-none" />
+
+        {/* Inner Screen Display Canvas */}
+        <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-[#0a101d] border border-white/10 flex items-center justify-center">
+          
+          {/* Screenshot Image with smooth animated transition */}
+          <motion.img
+            key={activeScreen.id}
+            src={activeScreen.image}
+            alt={activeScreen.title}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="w-full h-full object-cover object-center"
+          />
+
+          {/* Glass Glare Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none" />
+
+          {/* AR Camera Brackets & Holographic Scanline */}
+          {(activeScreen.id.startsWith('ar-') || activeScreen.id === 'ar-camera') && (
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-[#35A2F4]" />
+              <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-[#35A2F4]" />
+              <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-[#35A2F4]" />
+              <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-[#35A2F4]" />
+              <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-[#49F996] to-transparent animate-scan-line shadow-[0_0_12px_#49F996]" />
+            </div>
+          )}
+
+          {/* AR Status Bar Overlay at top of screen */}
+          <div className="absolute top-2.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-none z-20">
+            <span className="text-[9px] sm:text-[10px] font-mono text-[#49F996] bg-black/70 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-[#49F996]/30 flex items-center gap-1.5 shadow-md">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#49F996] animate-ping" />
+              AR-DUINO OS v2.4
+            </span>
+            <span className="text-[9px] sm:text-[10px] font-mono text-white/90 bg-black/70 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/20 shadow-md">
+              60 FPS • Vuforia AR
+            </span>
+          </div>
+
+          {/* Floating Navigation Controls Inside Phone Display Frame */}
+          <div className="absolute inset-y-0 left-2 right-2 flex items-center justify-between pointer-events-none z-30">
+            <button
+              onClick={handlePrev}
+              aria-label="Previous app screen"
+              className="pointer-events-auto w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/60 border border-white/20 text-white flex items-center justify-center backdrop-blur-md shadow-lg hover:bg-[#35A2F4] hover:border-[#35A2F4] hover:scale-110 active:scale-95 transition-all cursor-pointer group"
+            >
+              <ChevronLeft className="w-5 h-5 text-white/80 group-hover:text-white" />
+            </button>
+            <button
+              onClick={handleNext}
+              aria-label="Next app screen"
+              className="pointer-events-auto w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/60 border border-white/20 text-white flex items-center justify-center backdrop-blur-md shadow-lg hover:bg-[#35A2F4] hover:border-[#35A2F4] hover:scale-110 active:scale-95 transition-all cursor-pointer group"
+            >
+              <ChevronRight className="w-5 h-5 text-white/80 group-hover:text-white" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Screen Info & Description Caption Card */}
       <motion.div
-        key={activeScreen.id + '-header'}
-        initial={{ opacity: 0, y: -10 }}
+        key={activeScreen.id + '-caption'}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="w-full mb-4 flex items-center justify-between px-2"
+        className="w-full mt-4 p-4 sm:p-5 rounded-2xl bg-[#1c2b3f]/80 border border-white/10 backdrop-blur-md shadow-xl flex flex-col justify-between"
       >
-        <div className="flex items-center gap-2">
-          <span
-            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold uppercase tracking-wider backdrop-blur-md ${activeScreen.badgeBg} ${activeScreen.badgeText} ${activeScreen.badgeBorder}`}
-          >
-            <activeScreen.icon className="w-3.5 h-3.5" />
-            {activeScreen.category}
-          </span>
+        <div className="flex items-center justify-between gap-3 mb-2">
+          <div className="flex items-center gap-2">
+            <span
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold uppercase tracking-wider backdrop-blur-md ${activeScreen.badgeBg} ${activeScreen.badgeText} ${activeScreen.badgeBorder}`}
+            >
+              <ActiveIcon className="w-3.5 h-3.5" />
+              {activeScreen.category}
+            </span>
+          </div>
+
+          {/* Screen Counter Badge */}
+          <div className="flex items-center gap-1 text-xs font-mono text-[#8A9BB5] bg-black/30 px-2.5 py-1 rounded-full border border-white/10">
+            <span className="text-white font-bold">{activeIndex + 1}</span>
+            <span>/</span>
+            <span>{SCREENS.length}</span>
+          </div>
         </div>
 
-        <div className="flex items-center gap-1 text-xs font-mono text-[#8A9BB5]">
-          <span className="text-white font-bold">{activeIndex + 1}</span>
-          <span>/</span>
-          <span>{SCREENS.length}</span>
+        {/* Screen Title */}
+        <h3 className="font-nunito font-extrabold text-lg sm:text-xl text-white mb-1">
+          {activeScreen.title}
+        </h3>
+
+        {/* Screen Description */}
+        <p className="font-inter text-xs sm:text-sm text-[#8A9BB5] leading-relaxed">
+          {activeScreen.description}
+        </p>
+
+        {/* Bottom Pagination Dots */}
+        <div className="flex items-center justify-center gap-1.5 mt-3 pt-3 border-t border-white/5">
+          {SCREENS.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleSelect(idx)}
+              aria-label={`Go to screen ${idx + 1}`}
+              className={`h-2 rounded-full transition-all cursor-pointer ${
+                idx === activeIndex
+                  ? 'w-6 bg-[#35A2F4]'
+                  : 'w-2 bg-white/20 hover:bg-white/40'
+              }`}
+            />
+          ))}
         </div>
       </motion.div>
-
-      {/* 3D Stack Container with Perspective */}
-      <div className="relative w-full aspect-[16/10] sm:aspect-[16/9.5] perspective-[1200px] flex items-center justify-center">
-        
-        {/* Navigation Arrows on sides */}
-        <button
-          onClick={handlePrev}
-          aria-label="Previous screenshot"
-          className="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#162133]/90 border border-white/20 text-white flex items-center justify-center backdrop-blur-md shadow-xl hover:bg-[#35A2F4] hover:border-[#35A2F4] hover:scale-110 active:scale-95 transition-all cursor-pointer group"
-        >
-          <ChevronLeft className="w-6 h-6 text-[#8A9BB5] group-hover:text-white transition-colors" />
-        </button>
-
-        <button
-          onClick={handleNext}
-          aria-label="Next screenshot"
-          className="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#162133]/90 border border-white/20 text-white flex items-center justify-center backdrop-blur-md shadow-xl hover:bg-[#35A2F4] hover:border-[#35A2F4] hover:scale-110 active:scale-95 transition-all cursor-pointer group"
-        >
-          <ChevronRight className="w-6 h-6 text-[#8A9BB5] group-hover:text-white transition-colors" />
-        </button>
-
-        {/* Render 7 Cards in 3D Stack */}
-        {SCREENS.map((screen, idx) => {
-          const style = getCardStyle(idx);
-          const isActive = idx === activeIndex;
-
-          return (
-            <motion.div
-              key={screen.id}
-              onClick={() => handleSelect(idx)}
-              animate={{
-                zIndex: style.zIndex,
-                scale: style.scale,
-                x: style.x,
-                y: style.y,
-                rotateY: style.rotateY,
-                rotateX: style.rotateX,
-                opacity: style.opacity,
-                filter: style.filter
-              }}
-              transition={{
-                duration: 0.6,
-                ease: [0.25, 0.8, 0.25, 1]
-              }}
-              style={{
-                boxShadow: style.shadow,
-                transformStyle: 'preserve-3d'
-              }}
-              className={`absolute w-[92%] sm:w-[94%] aspect-[16/9.2] cursor-pointer rounded-2xl sm:rounded-3xl transition-shadow ${
-                isActive ? 'pointer-events-auto' : 'pointer-events-auto hover:opacity-90'
-              }`}
-            >
-              {/* Sleek Metallic Landscape Smartphone Frame */}
-              <div className="relative w-full h-full rounded-2xl sm:rounded-3xl p-2 sm:p-2.5 bg-gradient-to-b from-[#2a3c54] via-[#1c2b3f] to-[#0e1724] border-2 sm:border-4 border-white/20 shadow-2xl backdrop-blur-xl flex flex-col justify-between overflow-hidden group">
-                
-                {/* Phone Speaker Notch / Side Bar (Landscape Orientation) */}
-                <div className="absolute top-1/2 left-1 -translate-y-1/2 w-1.5 sm:w-2 h-10 sm:h-12 bg-white/10 rounded-full z-30" />
-                <div className="absolute top-1/2 right-1 -translate-y-1/2 w-1.5 sm:w-2 h-10 sm:h-12 bg-white/10 rounded-full z-30" />
-
-                {/* Inner Screen Canvas */}
-                <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-[#0a101d] border border-white/10 flex items-center justify-center">
-                  
-                  {/* Screenshot Image */}
-                  <img
-                    src={screen.image}
-                    alt={screen.title}
-                    className="w-full h-full object-cover object-center"
-                  />
-
-                  {/* Glass Glare Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none" />
-
-                  {/* AR Camera Overlay Lines & Scanline (if AR-related screen) */}
-                  {isActive && (screen.id.startsWith('ar-') || screen.id === 'ar-camera') && (
-                    <div className="absolute inset-0 pointer-events-none">
-                      {/* Corner Viewport Brackets */}
-                      <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-[#35A2F4]" />
-                      <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-[#35A2F4]" />
-                      <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-[#35A2F4]" />
-                      <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-[#35A2F4]" />
-
-                      {/* Moving Holographic Scan Line */}
-                      <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-[#49F996] to-transparent animate-scan-line shadow-[0_0_12px_#49F996]" />
-                    </div>
-                  )}
-
-                  {/* AR Status Bar Overlay at top of screen */}
-                  <div className="absolute top-2 left-3 right-3 flex items-center justify-between pointer-events-none z-20">
-                    <span className="text-[9px] sm:text-[10px] font-mono text-[#49F996] bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-full border border-[#49F996]/30 flex items-center gap-1.5 shadow-md">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#49F996] animate-ping" />
-                      AR-DUINO OS v2.4
-                    </span>
-                    <span className="text-[9px] sm:text-[10px] font-mono text-white/80 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/20 shadow-md hidden sm:inline-block">
-                      60 FPS • Vuforia AR
-                    </span>
-                  </div>
-
-                  {/* Click to Front Hint overlay on background cards */}
-                  {!isActive && (
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[1.5px] opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <span className="text-xs font-semibold text-white bg-black/70 px-3 py-1.5 rounded-full border border-white/30 backdrop-blur-md flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-[#35A2F4]" />
-                        Click to view
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
     </div>
   );
 };
+
 

@@ -11,6 +11,15 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const scrollDirection = useScrollDirection();
+  const [isScrolledPastHeroTop, setIsScrolledPastHeroTop] = useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolledPastHeroTop(window.scrollY > 120);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleNavClick = (page: 'home' | 'components', sectionId?: string) => {
     setMobileMenuOpen(false);
@@ -21,7 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
     <motion.header
       initial={{ y: 0 }}
       animate={{
-        y: scrollDirection === 'down' && !mobileMenuOpen ? -90 : 0
+        y: scrollDirection === 'down' && isScrolledPastHeroTop && !mobileMenuOpen ? -90 : 0
       }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
       className="fixed top-0 left-0 right-0 z-50 px-4 py-3 sm:px-6 lg:px-8"
