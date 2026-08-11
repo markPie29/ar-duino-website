@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { Navbar } from './components/Navbar';
 import { LandingPage } from './components/LandingPage';
 import { ComponentsPage } from './components/ComponentsPage';
+import { TutorialsPage } from './components/TutorialsPage';
 import './App.css';
 
 export function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'components'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'components' | 'tutorials'>('home');
 
-  const handleNavigate = (page: 'home' | 'components', sectionId?: string) => {
+  const handleNavigate = (page: 'home' | 'components' | 'tutorials', sectionId?: string) => {
     setCurrentPage(page);
 
     if (page === 'home') {
@@ -42,9 +43,14 @@ export function App() {
             onNavigateComponents={() => handleNavigate('components')}
             onNavigateSection={handleNavigate}
           />
-        ) : (
+        ) : currentPage === 'components' ? (
           <ComponentsPage
             key="components-page"
+            onNavigate={handleNavigate}
+          />
+        ) : (
+          <TutorialsPage
+            key="tutorials-page"
             onNavigate={handleNavigate}
           />
         )}
@@ -54,3 +60,4 @@ export function App() {
 }
 
 export default App;
+

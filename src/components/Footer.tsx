@@ -1,8 +1,8 @@
 import React from 'react';
-import { Layers, Mail, Smartphone, ArrowUp } from 'lucide-react';
+import { Layers, Mail, Smartphone, ArrowUp, Video } from 'lucide-react';
 
 interface FooterProps {
-  onNavigate: (page: 'home' | 'components', sectionId?: string) => void;
+  onNavigate: (page: 'home' | 'components' | 'tutorials', sectionId?: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
@@ -61,6 +61,24 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </li>
               <li>
                 <button
+                  onClick={() => onNavigate('tutorials')}
+                  className="hover:text-[#35A2F4] transition-colors cursor-pointer flex items-center gap-1.5"
+                >
+                  <Video className="w-3.5 h-3.5 text-[#35A2F4]" />
+                  <span>Video Tutorials</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('components')}
+                  className="hover:text-[#9B5FF5] transition-colors cursor-pointer flex items-center gap-1.5"
+                >
+                  <Layers className="w-3.5 h-3.5 text-[#9B5FF5]" />
+                  <span>Vuforia Component Library</span>
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={() => onNavigate('home', 'how-it-works')}
                   className="hover:text-white transition-colors cursor-pointer"
                 >
@@ -73,15 +91,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   className="hover:text-white transition-colors cursor-pointer"
                 >
                   App Features
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => onNavigate('components')}
-                  className="hover:text-[#9B5FF5] transition-colors cursor-pointer flex items-center gap-1.5"
-                >
-                  <Layers className="w-3.5 h-3.5 text-[#9B5FF5]" />
-                  <span>Vuforia Component Library</span>
                 </button>
               </li>
               <li>

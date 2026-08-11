@@ -5,7 +5,7 @@ import { ARDUINO_COMPONENTS, ArduinoComponent } from '../data/componentData';
 import { Footer } from './Footer';
 
 interface ComponentsPageProps {
-  onNavigate: (page: 'home' | 'components', sectionId?: string) => void;
+  onNavigate: (page: 'home' | 'components' | 'tutorials', sectionId?: string) => void;
 }
 
 export const ComponentsPage: React.FC<ComponentsPageProps> = ({ onNavigate }) => {

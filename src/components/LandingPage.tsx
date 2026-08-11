@@ -10,7 +10,7 @@ import { Footer } from './Footer';
 
 interface LandingPageProps {
   onNavigateComponents: () => void;
-  onNavigateSection: (page: 'home' | 'components', sectionId?: string) => void;
+  onNavigateSection: (page: 'home' | 'components' | 'tutorials', sectionId?: string) => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, Download, Cpu, Layers, Sparkles, Mail, Home } from 'lucide-react';
+import { Menu, X, Download, Layers, Sparkles, Mail, Home, Video } from 'lucide-react';
 import { useScrollDirection } from '../hooks/useScrollDirection';
 
 interface NavbarProps {
-  currentPage: 'home' | 'components';
-  onNavigate: (page: 'home' | 'components', sectionId?: string) => void;
+  currentPage: 'home' | 'components' | 'tutorials';
+  onNavigate: (page: 'home' | 'components' | 'tutorials', sectionId?: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
@@ -21,7 +21,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (page: 'home' | 'components', sectionId?: string) => {
+  const handleNavClick = (page: 'home' | 'components' | 'tutorials', sectionId?: string) => {
     setMobileMenuOpen(false);
     onNavigate(page, sectionId);
   };
@@ -64,7 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
           <nav className="hidden md:flex items-center gap-1 lg:gap-2">
             <button
               onClick={() => handleNavClick('home', 'hero')}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                 currentPage === 'home'
                   ? 'text-[#35A2F4] bg-[#35A2F4]/10 border border-[#35A2F4]/30'
                   : 'text-[#8A9BB5] hover:text-white hover:bg-white/5'
@@ -74,34 +74,39 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
             </button>
 
             <button
-              onClick={() => handleNavClick('home', 'how-it-works')}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#8A9BB5] hover:text-white hover:bg-white/5 transition-all"
+              onClick={() => handleNavClick('tutorials')}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
+                currentPage === 'tutorials'
+                  ? 'text-[#35A2F4] bg-[#35A2F4]/10 border border-[#35A2F4]/30'
+                  : 'text-[#8A9BB5] hover:text-[#35A2F4] hover:bg-[#35A2F4]/5'
+              }`}
             >
-              How It Works
-            </button>
-
-            <button
-              onClick={() => handleNavClick('home', 'features')}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#8A9BB5] hover:text-white hover:bg-white/5 transition-all"
-            >
-              Features
+              <Video className="w-4 h-4 text-[#35A2F4]" />
+              Video Tutorials
             </button>
 
             <button
               onClick={() => handleNavClick('components')}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
                 currentPage === 'components'
                   ? 'text-[#9B5FF5] bg-[#9B5FF5]/10 border border-[#9B5FF5]/30'
                   : 'text-[#8A9BB5] hover:text-[#9B5FF5] hover:bg-[#9B5FF5]/5'
               }`}
             >
-              <Layers className="w-4 h-4" />
+              <Layers className="w-4 h-4 text-[#9B5FF5]" />
               Vuforia Library
             </button>
 
             <button
+              onClick={() => handleNavClick('home', 'how-it-works')}
+              className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#8A9BB5] hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+            >
+              How It Works
+            </button>
+
+            <button
               onClick={() => handleNavClick('home', 'contact')}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#8A9BB5] hover:text-white hover:bg-white/5 transition-all"
+              className="px-3 py-1.5 rounded-lg text-sm font-medium text-[#8A9BB5] hover:text-white hover:bg-white/5 transition-all cursor-pointer"
             >
               Contact
             </button>
@@ -122,7 +127,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
           {/* Mobile Hamburger Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors focus:outline-none"
+            className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors focus:outline-none cursor-pointer"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -143,31 +148,28 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
             <div className="backdrop-blur-2xl bg-[#0e1724]/95 border border-white/10 rounded-2xl p-4 shadow-2xl flex flex-col gap-2">
               <button
                 onClick={() => handleNavClick('home', 'hero')}
-                className="flex items-center gap-3 w-full p-3 rounded-xl text-left text-white font-medium hover:bg-white/5 transition-colors"
+                className="flex items-center gap-3 w-full p-3 rounded-xl text-left text-white font-medium hover:bg-white/5 transition-colors cursor-pointer"
               >
                 <Home className="w-5 h-5 text-[#35A2F4]" />
                 <span>Home</span>
               </button>
 
               <button
-                onClick={() => handleNavClick('home', 'how-it-works')}
-                className="flex items-center gap-3 w-full p-3 rounded-xl text-left text-white font-medium hover:bg-white/5 transition-colors"
+                onClick={() => handleNavClick('tutorials')}
+                className="flex items-center justify-between w-full p-3 rounded-xl text-left text-white font-medium bg-[#35A2F4]/10 border border-[#35A2F4]/30 hover:bg-[#35A2F4]/20 transition-colors cursor-pointer"
               >
-                <Sparkles className="w-5 h-5 text-[#FC904F]" />
-                <span>How It Works</span>
-              </button>
-
-              <button
-                onClick={() => handleNavClick('home', 'features')}
-                className="flex items-center gap-3 w-full p-3 rounded-xl text-left text-white font-medium hover:bg-white/5 transition-colors"
-              >
-                <Cpu className="w-5 h-5 text-[#49F996]" />
-                <span>Features</span>
+                <div className="flex items-center gap-3">
+                  <Video className="w-5 h-5 text-[#35A2F4]" />
+                  <span>Video Tutorials</span>
+                </div>
+                <span className="text-[10px] bg-[#35A2F4] text-white px-2 py-0.5 rounded-full font-bold">
+                  4 Projects
+                </span>
               </button>
 
               <button
                 onClick={() => handleNavClick('components')}
-                className="flex items-center justify-between w-full p-3 rounded-xl text-left text-white font-medium bg-[#9B5FF5]/10 border border-[#9B5FF5]/30 hover:bg-[#9B5FF5]/20 transition-colors"
+                className="flex items-center justify-between w-full p-3 rounded-xl text-left text-white font-medium bg-[#9B5FF5]/10 border border-[#9B5FF5]/30 hover:bg-[#9B5FF5]/20 transition-colors cursor-pointer"
               >
                 <div className="flex items-center gap-3">
                   <Layers className="w-5 h-5 text-[#9B5FF5]" />
@@ -179,8 +181,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
               </button>
 
               <button
+                onClick={() => handleNavClick('home', 'how-it-works')}
+                className="flex items-center gap-3 w-full p-3 rounded-xl text-left text-white font-medium hover:bg-white/5 transition-colors cursor-pointer"
+              >
+                <Sparkles className="w-5 h-5 text-[#FC904F]" />
+                <span>How It Works</span>
+              </button>
+
+              <button
                 onClick={() => handleNavClick('home', 'contact')}
-                className="flex items-center gap-3 w-full p-3 rounded-xl text-left text-white font-medium hover:bg-white/5 transition-colors"
+                className="flex items-center gap-3 w-full p-3 rounded-xl text-left text-white font-medium hover:bg-white/5 transition-colors cursor-pointer"
               >
                 <Mail className="w-5 h-5 text-[#35A2F4]" />
                 <span>Contact & Feedback</span>
@@ -189,7 +199,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
               <div className="pt-2 border-t border-white/10 mt-1">
                 <button
                   onClick={() => handleNavClick('home', 'download')}
-                  className="flex items-center justify-center gap-2 w-full p-3 rounded-xl bg-[#FC904F] text-white font-nunito font-bold text-base shadow-lg shadow-[#FC904F]/30"
+                  className="flex items-center justify-center gap-2 w-full p-3 rounded-xl bg-[#FC904F] text-white font-nunito font-bold text-base shadow-lg shadow-[#FC904F]/30 cursor-pointer"
                 >
                   <Download className="w-5 h-5" />
                   <span>Download APK (Android)</span>
@@ -202,3 +212,4 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
     </motion.header>
   );
 };
+
