@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Layers, ArrowRight, Scan, Sparkles, Cpu } from 'lucide-react';
+import { Layers, ArrowRight, Scan } from 'lucide-react';
 import { ARDUINO_COMPONENTS } from '../data/componentData';
 
 interface ComponentsPreviewProps {
@@ -8,7 +8,7 @@ interface ComponentsPreviewProps {
 }
 
 export const ComponentsPreview: React.FC<ComponentsPreviewProps> = ({ onNavigateComponents }) => {
-  // Grab 4 featured items
+  // Grab 4 featured items across microcontrollers, sensors, inputs, and motors
   const previewItems = ARDUINO_COMPONENTS.slice(0, 4);
 
   return (
@@ -23,10 +23,10 @@ export const ComponentsPreview: React.FC<ComponentsPreviewProps> = ({ onNavigate
               <span>Vuforia Target Engine</span>
             </div>
             <h2 className="font-nunito text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
-              Interactive Component Library
+              Interactive Vuforia Target Library
             </h2>
             <p className="font-inter text-[#8A9BB5] text-base sm:text-lg mt-3 max-w-2xl">
-              Open our web component targets, scan them with the AR-DUINO mobile app, and watch 3D Arduino parts instantly spawn in front of you.
+              Open our web component target gallery, scan targets using your mobile phone camera in the <span className="text-white font-semibold">AR-DUINO</span> app, and watch 3D Arduino components instantly spawn in front of you.
             </p>
           </div>
 
@@ -35,7 +35,7 @@ export const ComponentsPreview: React.FC<ComponentsPreviewProps> = ({ onNavigate
             className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#9B5FF5] text-white font-nunito font-bold text-base hover:bg-[#9B5FF5]/90 transition-all cursor-pointer shadow-lg shadow-[#9B5FF5]/30 hover:scale-[1.02] active:scale-[0.98] shrink-0"
           >
             <Layers className="w-5 h-5" />
-            <span>Explore Full Library</span>
+            <span>Explore All 29 Targets</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -50,29 +50,27 @@ export const ComponentsPreview: React.FC<ComponentsPreviewProps> = ({ onNavigate
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               onClick={onNavigateComponents}
-              className="group rounded-2xl bg-[#1c2b3f]/70 border border-white/10 p-5 hover:border-[#9B5FF5]/40 transition-all duration-300 cursor-pointer backdrop-blur-md shadow-xl flex flex-col justify-between"
+              className="group rounded-2xl bg-[#1c2b3f]/70 border border-white/10 p-4 hover:border-[#9B5FF5]/40 transition-all duration-300 cursor-pointer backdrop-blur-md shadow-xl flex flex-col justify-between hover:scale-[1.02]"
             >
               <div>
-                {/* Image / Gradient Box */}
-                <div className={`relative h-40 rounded-xl bg-gradient-to-br ${comp.gradient} border border-white/10 flex flex-col items-center justify-center p-4 overflow-hidden group-hover:scale-[1.03] transition-transform duration-300 mb-4`}>
-                  <div className="absolute top-2 right-2 px-2 py-0.5 rounded bg-black/40 text-[10px] font-mono text-white/80 border border-white/10">
+                {/* Real Target Image Box */}
+                <div className="relative h-44 rounded-xl bg-[#0F172A] border border-white/10 flex items-center justify-center p-3 overflow-hidden mb-4 shadow-inner group-hover:border-[#9B5FF5]/40 transition-colors">
+                  <span className="absolute top-2 right-2 z-10 px-2 py-0.5 rounded bg-black/70 backdrop-blur-md text-[10px] font-mono text-[#35A2F4] border border-[#35A2F4]/30">
                     {comp.category}
-                  </div>
-                  
-                  {/* Icon Silhouette */}
-                  <div className="w-14 h-14 rounded-full bg-white/10 border border-white/20 flex items-center justify-center backdrop-blur-md mb-2 shadow-inner">
-                    <Cpu className="w-7 h-7 text-white filter drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
-                  </div>
-                  
-                  <span className="text-xs font-nunito font-bold text-white text-center line-clamp-1">
-                    {comp.name}
                   </span>
+                  
+                  <img
+                    src={comp.image}
+                    alt={`${comp.name} Target`}
+                    className="w-full h-full object-contain z-0 group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
                 </div>
 
-                <h3 className="font-nunito font-bold text-lg text-white group-hover:text-[#35A2F4] transition-colors mb-2">
+                <h3 className="font-nunito font-bold text-base text-white group-hover:text-[#35A2F4] transition-colors mb-1.5 line-clamp-1">
                   {comp.name}
                 </h3>
-                <p className="font-inter text-xs text-[#8A9BB5] line-clamp-2">
+                <p className="font-inter text-xs text-[#8A9BB5] leading-relaxed line-clamp-2">
                   {comp.description}
                 </p>
               </div>
